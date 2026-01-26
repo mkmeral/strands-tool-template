@@ -23,7 +23,7 @@ python setup_template.py
 
 You'll be prompted for:
 
-- **Package name** — A short identifier like `google`, `slack`, or `redis`. This becomes your module name (`strands_google`) and PyPI package name (`strands-google`).
+- **Package name** — A short identifier like `amazon`, `slack`, or `redis`. This becomes your module name (`strands_amazon`) and PyPI package name (`strands-amazon`).
 - **Author info** — Your name, email, and GitHub username for `pyproject.toml`.
 - **Description** — A one-line description of your package.
 
@@ -141,9 +141,9 @@ Follow these conventions so your package fits the Strands ecosystem:
 
 | Item | Convention | Example |
 |------|------------|---------|
-| PyPI package | `strands-{name}` | `strands-google` |
-| Python module | `strands_{name}` | `strands_google` |
-| Model class | `{Name}Model` | `GoogleModel` |
+| PyPI package | `strands-{name}` | `strands-amazon` |
+| Python module | `strands_{name}` | `strands_amazon` |
+| Model class | `{Name}Model` | `AmazonModel` |
 | Session manager | `{Name}SessionManager` | `RedisSessionManager` |
 | Conversation manager | `{Name}ConversationManager` | `SummarizingConversationManager` |
 | Hook provider | `{Name}HookProvider` | `TelemetryHookProvider` |
