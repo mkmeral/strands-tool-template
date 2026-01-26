@@ -4,12 +4,11 @@ import logging
 from collections.abc import AsyncGenerator
 from typing import Any
 
-from typing_extensions import override
-
 from strands.models.model import Model
 from strands.types.content import Messages
 from strands.types.streaming import StreamEvent
 from strands.types.tools import ToolSpec
+from typing_extensions import override
 
 logger = logging.getLogger(__name__)
 
