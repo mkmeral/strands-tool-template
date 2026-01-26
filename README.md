@@ -1,134 +1,160 @@
-# strands-tool-yourname
+# Strands Template
 
-> **TODO**: Replace "yourname" with your package name throughout this repository
+This template helps you build and publish custom components for [Strands Agents](https://github.com/strands-agents/sdk-python). Whether you're creating a new tool, model provider, or session manager, this repo gives you a starting point with the right structure and conventions.
 
-A [Strands Agents](https://github.com/strands-agents/sdk-python) package providing custom components.
+## Getting started
 
-## Installation
+### 1. Create your repository
 
-```bash
-pip install strands-tool-yourname
-```
-
-## Components
-
-This package includes templates for all major Strands SDK extension points:
-
-### Tool
-
-```python
-from strands import Agent
-from strands_tool_yourname import your_tool
-
-agent = Agent(tools=[your_tool])
-agent("Use my tool")
-```
-
-### Model Provider
-
-```python
-from strands import Agent
-from strands_tool_yourname import YourModel
-
-model = YourModel(api_key="your-api-key", model_id="your-model-id")
-agent = Agent(model=model)
-agent("Hello!")
-```
-
-### Hook Provider
-
-```python
-from strands import Agent
-from strands_tool_yourname import YourHookProvider
-
-hooks = YourHookProvider(config_option="value")
-agent = Agent(hooks=[hooks])
-agent("Hello!")  # Hooks triggered automatically
-```
-
-### Session Manager
-
-```python
-from strands import Agent
-from strands_tool_yourname import YourSessionManager
-
-session = YourSessionManager(session_id="my-session")
-agent = Agent(session_manager=session)
-agent("Hello!")  # Conversation persisted
-```
-
-### Conversation Manager
-
-```python
-from strands import Agent
-from strands_tool_yourname import YourConversationManager
-
-cm = YourConversationManager(max_messages=50)
-agent = Agent(conversation_manager=cm)
-agent("Hello!")  # History managed automatically
-```
-
-## Component Files
-
-| Component | File | Base Class/Interface |
-|-----------|------|---------------------|
-| Tool | `your_tool.py` | `@tool` decorator |
-| Model Provider | `your_model.py` | `strands.models.model.Model` |
-| Hook Provider | `your_hook_provider.py` | `strands.hooks.registry.HookProvider` |
-| Session Manager | `your_session_manager.py` | `strands.session.SessionManager` |
-| Conversation Manager | `your_conversation_manager.py` | `strands.agent.conversation_manager.ConversationManager` |
-
-## Development
-
-### Setup
+Click "Use this template" on GitHub to create your own repository. Then clone it locally:
 
 ```bash
-git clone https://github.com/yourusername/strands-tool-yourname
-cd strands-tool-yourname
+git clone https://github.com/yourusername/your-repo-name
+cd your-repo-name
+```
+
+### 2. Run the setup script
+
+The setup script customizes the template for your project. It renames files, updates imports, and configures `pyproject.toml` with your details.
+
+```bash
+python setup_template.py
+```
+
+You'll be prompted for:
+
+- **Package name** — A short identifier like `google`, `slack`, or `redis`. This becomes your module name (`strands_google`) and PyPI package name (`strands-google`).
+- **Author info** — Your name, email, and GitHub username for `pyproject.toml`.
+- **Description** — A one-line description of your package.
+
+### 3. Install dependencies
+
+```bash
 pip install -e ".[dev]"
 ```
 
-### Running Tests
+## What's in this template
+
+The template includes skeleton implementations for all major Strands extension points.
+
+| File | Component | Purpose |
+|------|-----------|---------|
+| `tool.py` | Tool | Add capabilities to agents using the `@tool` decorator |
+| `model.py` | Model provider | Integrate custom LLM APIs |
+| `hook_provider.py` | Hook provider | React to agent lifecycle events |
+| `session_manager.py` | Session manager | Persist conversations across restarts |
+| `conversation_manager.py` | Conversation manager | Control how conversation history is managed |
+
+### Keep what you need, delete the rest
+
+Most packages only need one or two components. Delete the files you don't need and remove their exports from `__init__.py`.
+
+For example, if you're building a tool package:
+
+1. Keep `tool.py` and `test_tool.py`
+2. Delete the other component files
+3. Update `__init__.py` to only export your tool
+
+## Implementing your components
+
+Each file contains a minimal skeleton. Here's what to implement:
+
+### Tools
+
+Tools let agents interact with external systems and perform actions. Implement your logic inside the decorated function and return a result dict.
+
+- [Creating custom tools](https://strandsagents.com/latest/user-guide/concepts/tools/custom-tools/) — Documentation
+- [Official tools repository](https://github.com/strands-agents/tools) — Implementation examples
+
+### Model providers
+
+Model providers connect agents to LLM APIs. Implement the `stream()` method to receive messages and yield streaming events.
+
+- [Custom providers](https://strandsagents.com/latest/user-guide/concepts/model-providers/custom_model_provider/) — Documentation
+- [Anthropic provider](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/anthropic.py) — Implementation example
+
+### Hook providers
+
+Hooks let you react to agent lifecycle events like invocations, tool calls, and model calls. Register callbacks for the events you care about.
+
+- [Hooks](https://strandsagents.com/latest/user-guide/concepts/agents/hooks/) — Documentation
+
+### Session managers
+
+Session managers persist conversations to external storage, enabling conversations to resume after restarts or be shared across instances.
+
+- [Session management](https://strandsagents.com/latest/user-guide/concepts/agents/session-management/) — Documentation
+- [File session manager](https://github.com/strands-agents/sdk-python/blob/main/src/strands/session/file_session_manager.py) — Implementation example
+
+### Conversation managers
+
+Conversation managers control how message history grows over time. They handle trimming old messages or summarizing context to stay within model limits.
+
+- [Conversation management](https://strandsagents.com/latest/user-guide/concepts/agents/conversation-management/) — Documentation
+- [Sliding window manager](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py) — Implementation example
+
+## Testing
+
+Run all checks (format, lint, typecheck, test):
 
 ```bash
-pytest
+hatch run prepare
 ```
 
-### Linting and Formatting
+Or run them individually:
 
 ```bash
-ruff format
-ruff check
-mypy src
+hatch run test        # Run tests
+hatch run lint        # Run linter
+hatch run typecheck   # Run type checker
+hatch run format      # Format code
 ```
-
-## Customization
-
-Each component file contains TODO comments indicating what needs to be customized:
-
-1. **Tool** (`your_tool.py`): Implement your tool's logic in the function body
-2. **Model Provider** (`your_model.py`): Implement `stream()` method with your API
-3. **Hook Provider** (`your_hook_provider.py`): Implement callbacks for events you need
-4. **Session Manager** (`your_session_manager.py`): Implement storage operations
-5. **Conversation Manager** (`your_conversation_manager.py`): Implement your management strategy
 
 ## Publishing to PyPI
 
-1. Update the version in `pyproject.toml`
-2. Commit: `git commit -am "Release v0.1.0"`
-3. Tag: `git tag v0.1.0`
-4. Push: `git push && git push --tags`
-5. Create a GitHub release
+You can publish manually or through GitHub Actions.
+
+### Option 1: GitHub release (recommended)
+
+The included workflow automatically publishes to PyPI when you create a GitHub release. Version is derived from the git tag automatically.
+
+1. Create a release on GitHub with a tag like `v0.1.0`
+2. The workflow runs checks, builds, and publishes
+
+To enable this, configure PyPI trusted publishing:
+
+1. Go to PyPI → Your projects → Publishing
+2. Add a new pending publisher with your GitHub repo details
+3. Set environment name to `pypi`
+
+### Option 2: Manual publish
+
+```bash
+hatch build
+pip install twine
+twine upload dist/*
+```
+
+## Naming conventions
+
+Follow these conventions so your package fits the Strands ecosystem:
+
+| Item | Convention | Example |
+|------|------------|---------|
+| PyPI package | `strands-{name}` | `strands-google` |
+| Python module | `strands_{name}` | `strands_google` |
+| Model class | `{Name}Model` | `GoogleModel` |
+| Session manager | `{Name}SessionManager` | `RedisSessionManager` |
+| Conversation manager | `{Name}ConversationManager` | `SummarizingConversationManager` |
+| Hook provider | `{Name}HookProvider` | `TelemetryHookProvider` |
+| Tool function | `{descriptive_name}` | `search_web`, `send_email` |
+
+## Resources
+
+- [Strands Agents documentation](https://strandsagents.com/)
+- [SDK Python repository](https://github.com/strands-agents/sdk-python)
+- [Official tools repository](https://github.com/strands-agents/tools)
 
 ## License
 
-Apache 2.0 License - see [LICENSE](LICENSE) file for details.
-
-## Links
-
-- [Strands Agents Documentation](https://strandsagents.com/)
-- [Strands Agents GitHub](https://github.com/strands-agents/sdk-python)
-
----
-
-Built with ❤️ for the [Strands Agents](https://github.com/strands-agents/sdk-python) community
+Apache 2.0 — see [LICENSE](LICENSE) for details.

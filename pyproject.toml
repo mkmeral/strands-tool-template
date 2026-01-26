@@ -1,18 +1,18 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "strands-tool-yourname"  # TODO: Replace with your package name
-version = "0.1.0"
-description = "Your package description"  # TODO: Add a brief description
+name = "strands-template"
+dynamic = ["version"]
+description = "Your package description"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}  # TODO: Add your information
+    {name = "Your Name", email = "your.email@example.com"}
 ]
-keywords = ["strands", "agents", "ai", "tool"]  # TODO: Add relevant keywords
+keywords = ["strands", "agents", "ai", "tool"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -27,14 +27,13 @@ classifiers = [
 dependencies = [
     "strands-agents>=1.0.0",
     "pydantic>=2.0.0",
-    # TODO: Add your dependencies here
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/strands-tool-yourname"  # TODO: Update URLs
-Documentation = "https://github.com/yourusername/strands-tool-yourname#readme"
-Repository = "https://github.com/yourusername/strands-tool-yourname"
-Issues = "https://github.com/yourusername/strands-tool-yourname/issues"
+Homepage = "https://github.com/yourusername/strands-template"
+Documentation = "https://github.com/yourusername/strands-template#readme"
+Repository = "https://github.com/yourusername/strands-template"
+Issues = "https://github.com/yourusername/strands-template/issues"
 
 [project.optional-dependencies]
 dev = [
@@ -42,10 +41,29 @@ dev = [
     "pytest-asyncio>=0.23.0",
     "ruff>=0.13.0,<0.14.0",
     "mypy>=0.981,<1.0.0",
+    "hatch",
 ]
 
+[tool.hatch.version]
+source = "vcs"
+
 [tool.hatch.build.targets.wheel]
-packages = ["src/strands_tool_yourname"]
+packages = ["src/strands_template"]
+
+[tool.hatch.envs.default]
+dependencies = [
+    "pytest>=8.0.0,<9.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.13.0,<0.14.0",
+    "mypy>=0.981,<1.0.0",
+]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args}"
+lint = "ruff check src tests"
+format = "ruff format src tests"
+typecheck = "mypy src"
+prepare = ["format", "lint", "typecheck", "test"]
 
 [tool.ruff]
 line-length = 120
