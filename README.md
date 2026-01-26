@@ -149,6 +149,14 @@ Follow these conventions so your package fits the Strands ecosystem:
 | Hook provider | `{Name}HookProvider` | `TelemetryHookProvider` |
 | Tool function | `{descriptive_name}` | `search_web`, `send_email` |
 
+## Get featured
+
+Help others discover your package by adding the `strands-agents` topic to your GitHub repository. This makes it easier for the community to find Strands extensions.
+
+To add topics: go to your repo → click the ⚙️ gear next to "About" → add `strands-agents` and other relevant topics.
+
+You can also submit your package to be featured on the Strands website. See [Get Featured](https://strandsagents.com/latest/documentation/docs/community/get-featured/) for details.
+
 ## Resources
 
 - [Strands Agents documentation](https://strandsagents.com/)
