@@ -1,9 +1,10 @@
 """Model Provider Implementation."""
 
 import logging
-from collections.abc import AsyncGenerator
-from typing import Any
+from collections.abc import AsyncGenerator, AsyncIterable
+from typing import Any, TypeVar
 
+from pydantic import BaseModel
 from strands.models.model import Model
 from strands.types.content import Messages
 from strands.types.streaming import StreamEvent
@@ -11,6 +12,8 @@ from strands.types.tools import ToolSpec
 from typing_extensions import override
 
 logger = logging.getLogger(__name__)
+
+T = TypeVar("T", bound=BaseModel)
 
 
 class TemplateModel(Model):
@@ -38,19 +41,21 @@ class TemplateModel(Model):
         tool_specs: list[ToolSpec] | None = None,
         system_prompt: str | None = None,
         **kwargs: Any,
-    ) -> AsyncGenerator[StreamEvent, None]:
+    ) -> AsyncIterable[StreamEvent]:
         """Stream conversation with the model."""
         # TODO: Implement streaming logic
         raise NotImplementedError
         yield  # type: ignore
 
     @override
-    def structured_output(
+    async def structured_output(
         self,
-        output_model: type,
-        messages: Messages,
+        output_model: type[T],
+        prompt: Messages,
         system_prompt: str | None = None,
-    ) -> Any:
+        **kwargs: Any,
+    ) -> AsyncGenerator[dict[str, T | Any], None]:
         """Generate structured output from the model."""
         # TODO: Implement structured output logic
         raise NotImplementedError
+        yield  # type: ignore

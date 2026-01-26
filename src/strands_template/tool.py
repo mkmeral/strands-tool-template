@@ -19,4 +19,4 @@ def template_tool(param1: str) -> dict[str, Any]:
         Dict containing status and response content.
     """
     # TODO: Implement your tool logic
-    pass
+    ...

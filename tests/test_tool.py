@@ -4,4 +4,4 @@
 def test_template_tool():
     """Test basic functionality."""
     # TODO: Implement tests
-    pass
+    ...
