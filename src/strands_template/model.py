@@ -44,3 +44,14 @@ class TemplateModel(Model):
         # TODO: Implement streaming logic
         raise NotImplementedError
         yield  # type: ignore
+
+    @override
+    def structured_output(
+        self,
+        output_model: type,
+        messages: Messages,
+        system_prompt: str | None = None,
+    ) -> Any:
+        """Generate structured output from the model."""
+        # TODO: Implement structured output logic
+        raise NotImplementedError
