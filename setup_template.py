@@ -12,8 +12,6 @@ This script will:
 6. Delete itself when done
 
 Usage:
-    uv run setup_template.py
-    # or
     python setup_template.py
 """
 
@@ -288,7 +286,7 @@ def main() -> None:
     print("\n✅ Setup complete!\n")
     print("Next steps:")
     print("  1. Review the generated files")
-    print("  2. Install dev dependencies: uv pip install -e '.[dev]'")
+    print("  2. Install dev dependencies: pip install -e '.[dev]'")
     print("  3. Run checks: hatch run prepare")
     print("  4. Start implementing your components")
     print()

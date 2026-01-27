@@ -18,7 +18,7 @@ cd your-repo-name
 The setup script customizes the template for your project. It renames files, updates imports, configures `pyproject.toml`, and removes components you don't need.
 
 ```bash
-uv run setup_template.py
+python setup_template.py
 ```
 
 You'll be prompted for:
@@ -31,7 +31,7 @@ You'll be prompted for:
 ### 3. Install dependencies
 
 ```bash
-uv pip install -e ".[dev]"
+pip install -e ".[dev]"
 ```
 
 ## What's in this template
