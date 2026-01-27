@@ -15,22 +15,23 @@ cd your-repo-name
 
 ### 2. Run the setup script
 
-The setup script customizes the template for your project. It renames files, updates imports, and configures `pyproject.toml` with your details.
+The setup script customizes the template for your project. It renames files, updates imports, configures `pyproject.toml`, and removes components you don't need.
 
 ```bash
-python setup_template.py
+uv run setup_template.py
 ```
 
 You'll be prompted for:
 
 - **Package name** — A short identifier like `amazon`, `slack`, or `redis`. This becomes your module name (`strands_amazon`) and PyPI package name (`strands-amazon`).
+- **Components** — Which extension points you want to include (tool, model, hooks, etc.)
 - **Author info** — Your name, email, and GitHub username for `pyproject.toml`.
 - **Description** — A one-line description of your package.
 
 ### 3. Install dependencies
 
 ```bash
-pip install -e ".[dev]"
+uv pip install -e ".[dev]"
 ```
 
 ## What's in this template
@@ -41,19 +42,11 @@ The template includes skeleton implementations for all major Strands extension p
 |------|-----------|---------|
 | `tool.py` | Tool | Add capabilities to agents using the `@tool` decorator |
 | `model.py` | Model provider | Integrate custom LLM APIs |
-| `hook_provider.py` | Hook provider | React to agent lifecycle events |
+| `hook_provider.py` | Hooks | Extend agent behavior and react to lifecycle events |
 | `session_manager.py` | Session manager | Persist conversations across restarts |
-| `conversation_manager.py` | Conversation manager | Control how conversation history is managed |
+| `conversation_manager.py` | Conversation manager | Control context window and message history |
 
-### Keep what you need, delete the rest
-
-Most packages only need one or two components. Delete the files you don't need and remove their exports from `__init__.py`.
-
-For example, if you're building a tool package:
-
-1. Keep `tool.py` and `test_tool.py`
-2. Delete the other component files
-3. Update `__init__.py` to only export your tool
+The setup script will remove components you don't select, so you only keep what you need.
 
 ## Implementing your components
 
@@ -64,18 +57,19 @@ Each file contains a minimal skeleton. Here's what to implement:
 Tools let agents interact with external systems and perform actions. Implement your logic inside the decorated function and return a result dict.
 
 - [Creating custom tools](https://strandsagents.com/latest/user-guide/concepts/tools/custom-tools/) — Documentation
-- [Official tools repository](https://github.com/strands-agents/tools) — Implementation examples
+- [sleep](https://github.com/strands-agents/tools/blob/main/src/strands_tools/sleep.py) — Simple tool with error handling
+- [browser](https://github.com/strands-agents/tools/blob/main/src/strands_tools/browser/__init__.py) — Multi-tool package example
 
 ### Model providers
 
 Model providers connect agents to LLM APIs. Implement the `stream()` method to receive messages and yield streaming events.
 
 - [Custom providers](https://strandsagents.com/latest/user-guide/concepts/model-providers/custom_model_provider/) — Documentation
-- [Anthropic provider](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/anthropic.py) — Implementation example
+- [strands-clova](https://github.com/aidendef/strands-clova) — Community model provider example
 
-### Hook providers
+### Hooks
 
-Hooks let you react to agent lifecycle events like invocations, tool calls, and model calls. Register callbacks for the events you care about.
+Hooks let you extend the agent loop and alter behavior during lifecycle events like invocations, tool calls, and model calls. You can observe events, modify data, or change execution flow.
 
 - [Hooks](https://strandsagents.com/latest/user-guide/concepts/agents/hooks/) — Documentation
 
@@ -88,7 +82,7 @@ Session managers persist conversations to external storage, enabling conversatio
 
 ### Conversation managers
 
-Conversation managers control how message history grows over time. They handle trimming old messages or summarizing context to stay within model limits.
+Conversation managers control the context window and how message history grows over time. They handle trimming old messages or summarizing context to stay within model limits.
 
 - [Conversation management](https://strandsagents.com/latest/user-guide/concepts/agents/conversation-management/) — Documentation
 - [Sliding window manager](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/conversation_manager/sliding_window_conversation_manager.py) — Implementation example
@@ -118,14 +112,17 @@ You can publish manually or through GitHub Actions.
 
 The included workflow automatically publishes to PyPI when you create a GitHub release. Version is derived from the git tag automatically.
 
-1. Create a release on GitHub with a tag like `v0.1.0`
-2. The workflow runs checks, builds, and publishes
+1. Configure PyPI trusted publishing first (see below)
+2. Create a release on GitHub with a tag like `v0.1.0`
+3. The workflow runs checks, builds, and publishes
 
-To enable this, configure PyPI trusted publishing:
+To configure PyPI trusted publishing:
 
 1. Go to PyPI → Your projects → Publishing
 2. Add a new pending publisher with your GitHub repo details
 3. Set environment name to `pypi`
+
+**Note:** If you create a release without configuring trusted publishing, the workflow will fail. Set this up before your first release.
 
 ### Option 2: Manual publish
 
@@ -146,7 +143,7 @@ Follow these conventions so your package fits the Strands ecosystem:
 | Model class | `{Name}Model` | `AmazonModel` |
 | Session manager | `{Name}SessionManager` | `RedisSessionManager` |
 | Conversation manager | `{Name}ConversationManager` | `SummarizingConversationManager` |
-| Hook provider | `{Name}HookProvider` | `TelemetryHookProvider` |
+| Hooks | `{Name}Hooks` | `TelemetryHooks`, `LoggingHooks` |
 | Tool function | `{descriptive_name}` | `search_web`, `send_email` |
 
 ## Get featured
@@ -155,13 +152,14 @@ Help others discover your package by adding the `strands-agents` topic to your G
 
 To add topics: go to your repo → click the ⚙️ gear next to "About" → add `strands-agents` and other relevant topics.
 
-You can also submit your package to be featured on the Strands website. See [Get Featured](https://strandsagents.com/latest/documentation/docs/community/get-featured/) for details.
+You can also submit your package to be featured on the Strands website. See [Get Featured](https://strandsagents.com/latest/community/get-featured/) for details.
 
 ## Resources
 
 - [Strands Agents documentation](https://strandsagents.com/)
 - [SDK Python repository](https://github.com/strands-agents/sdk-python)
 - [Official tools repository](https://github.com/strands-agents/tools)
+- [Community packages](https://strandsagents.com/latest/community/community-packages/)
 
 ## License
 
